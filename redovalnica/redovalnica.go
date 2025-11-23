@@ -23,10 +23,10 @@ func IzpisVsehOcen(studenti map[string]Student) {
 	fmt.Println()
 }
 
-// Calculates the povprecje of all the ocene in the redovalnica za danega študenta (z dano vpisno številko)
-// returns povprečje, brez izpisov (izpisi se naredijo kjer se pokliče funkcija)
+// Calculates the povprecje of all the ocene in the redovalnica za danega študenta (z dano vpisno številko), če je št. ocen >= stOcen
+// returns povprecno oceno, izpise informacije
 // PRIVATNA FUNKCIJA
-func povprecje(studenti map[string]Student, vpisnaStevilka string) float64 {
+func povprecje(studenti map[string]Student, vpisnaStevilka string, stOcen int) float64 {
 	student, ok := studenti[vpisnaStevilka]
 
 	if !ok {
@@ -43,24 +43,34 @@ func povprecje(studenti map[string]Student, vpisnaStevilka string) float64 {
 		i++
 	}
 
-	pov = float64(sum_ocen) / float64(st_ocen)
-	if pov < 6.0 {
+	if st_ocen < stOcen {
+		fmt.Println("Študent/ka ima premalo ocen in zaradi tega NI OPRAVIL/A predmeta.")
+		fmt.Println("Št. potrebnih ocen:", stOcen)
+		fmt.Println("Št. ocen študenta:", st_ocen)
 		return 0.0
 	}
+
+	pov = float64(sum_ocen) / float64(st_ocen)
+	if pov < 6.0 {
+		fmt.Println("Študent/ka ima povprečje ocen", pov, "in zaradi tega predmeta NI OPRAVIL/A.")
+		return 0.0
+	}
+
+	fmt.Println("Študent/ka", studenti[vpisnaStevilka].Ime, "ima povprečje ocen", pov, "in št. ocen", st_ocen, "in je predmet OPRAVIL/A.")
 	return pov
 }
 
 // Public funtion, ki pokliče privatno funkcijo povprecje()
-func IzpisiKoncniUspeh(studenti map[string]Student, vpisnaStevilka string) float64 {
-	return povprecje(studenti, vpisnaStevilka)
+func IzpisiKoncniUspeh(studenti map[string]Student, vpisnaStevilka string, stOcen int) float64 {
+	return povprecje(studenti, vpisnaStevilka, stOcen)
 }
 
-// Danemu študentu (z dano vpisno številko) v redovalnico apppend-amo dano oceno
+// Danemu študentu (z dano vpisno številko) v redovalnico apppend-amo dano oceno, če je ocena znotraj intervala [minOcena, maxOcena]
 // retuns celotno redovalnico
-func DodajOceno(studenti map[string]Student, vpisnaStevilka string, ocena int) map[string]Student {
-	if ocena < 5 || ocena > 10 {
-		fmt.Println("Na kakem faksu imajo ocene pod 5 ali nad 10?")
-		os.Exit(1)
+func DodajOceno(studenti map[string]Student, vpisnaStevilka string, ocena int, minOcena int, maxOcena int) map[string]Student {
+	if ocena < minOcena || ocena > maxOcena {
+		fmt.Println("Na kakem faksu imajo ocene pod", minOcena, "ali nad", maxOcena, "?")
+		return studenti
 	}
 
 	student, ok := studenti[vpisnaStevilka]
@@ -68,7 +78,7 @@ func DodajOceno(studenti map[string]Student, vpisnaStevilka string, ocena int) m
 		student.Ocene = append(student.Ocene, ocena)
 		studenti[vpisnaStevilka] = student
 	} else {
-		fmt.Println("Ta student ne obstaja!")
+		fmt.Println("Ta student/ka ne obstaja!")
 		os.Exit(1)
 	}
 	return studenti

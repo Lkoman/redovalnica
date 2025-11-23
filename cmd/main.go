@@ -68,17 +68,16 @@ func main() {
 				Ocene:   []int{10, 10, 10},
 			}
 
-			studenti["63210152"] = s1
+			studenti["63210000"] = s1
 			studenti["63210043"] = s2
 			studenti["63210067"] = s3
 
 			redovalnica.IzpisVsehOcen(studenti)
 
-			studenti = redovalnica.DodajOceno(studenti, "63210152", 9)
+			studenti = redovalnica.DodajOceno(studenti, "63210000", 9, minOcena, maxOcena)
 
 			redovalnica.IzpisVsehOcen(studenti)
-
-			fmt.Println("Povprecje ocen za studenta", studenti["63210152"].Ime, ":", redovalnica.IzpisiKoncniUspeh(studenti, "63210152"))
+			redovalnica.IzpisiKoncniUspeh(studenti, "63210000", stOcen)
 
 			return nil
 		},
