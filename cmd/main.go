@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/lkoman/redovalnica"
+	"github.com/lkoman/redovalnica/redovalnica"
 	"github.com/urfave/cli/v3"
 )
 
